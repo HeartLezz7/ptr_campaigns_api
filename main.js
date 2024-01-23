@@ -1,12 +1,12 @@
-const fs = require("fs/promises");
+const { readFile, writeFile } = require("./handleFile");
 
-const read = async () => {
-  const res = await fs.readFile("products.json", "utf-8");
-  const arr = JSON.parse(res);
-  arr[0].price = 500;
-  console.log(arr);
-  const str = JSON.stringify(arr);
-  await fs.writeFile("products.json", str);
+const discount = async () => {
+  try {
+    let products = await readFile("products.json");
+    console.log(products);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-read();
+discount();

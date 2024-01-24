@@ -1,6 +1,6 @@
 [
-  { "name": "Shirt", "category": "cloth", "price": 4000 },
-  { "name": "Hat", "category": "cloth", "price": 2800 },
+  { "name": "Shirt", "category": "cloth", "price": 400 },
+  { "name": "Hat", "category": "cloth", "price": 280 },
   { "name": "Watch", "category": "accessory", "price": 2800 },
-  { "name": "Phone", "category": "accessory", "price": 80000 }
+  { "name": "Phone", "category": "accessory", "price": 5000 }
 ]

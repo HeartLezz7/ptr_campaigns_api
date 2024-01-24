@@ -9,7 +9,7 @@ function sumPrice(arr, category) {
   }, 0);
 }
 
-const discount = async (amout, isUse = false) => {
+const discount = async (amout = {}, isUsePoint = false) => {
   try {
     const products = await readFile("products.json");
     const user = await readFile("user.json");
@@ -19,7 +19,6 @@ const discount = async (amout, isUse = false) => {
     const sumAccessory = sumPrice(products, "accessory");
     const sumCloth = sumPrice(products, "cloth");
     const totalPrice = sumAccessory + sumCloth;
-    console.log(sumAccessory + sumCloth);
 
     // coupon
     if (amout.coupon != undefined) {
@@ -35,7 +34,7 @@ const discount = async (amout, isUse = false) => {
     }
 
     // on top
-    if (user.point > 0 && isUse) {
+    if (user.point > 0 && isUsePoint) {
       discount = user.point;
       if (discount > totalPrice * 0.2) {
         console.log("first");
@@ -46,12 +45,32 @@ const discount = async (amout, isUse = false) => {
       }
     }
 
-    //seasonal
+    if (amout.onTop != undefined && amout.category.length != 0) {
+    }
 
-    return discountPrice;
+    //seasonal
+    if (amout.seasonal != undefined) {
+      discount =
+        Math.floor(totalPrice / amout.seasonal.every) * amout.seasonal.price;
+      discountPrice += totalPrice - discount;
+    }
+
+    return discountPrice || totalPrice;
   } catch (error) {
     console.log(error);
   }
 };
 
-discount({ percentage: 10 }, true).then((res) => console.log(res));
+discount({ seasonal: { every: 300, price: 40 } }).then((res) =>
+  console.log(res)
+);
+
+parameter = [
+  {
+    coupon: { fix: 500, percentage: 100 },
+    onTop: 15,
+    category: [],
+    seasonal: { every: 300, price: 40 },
+  },
+  "isUsePoint",
+];

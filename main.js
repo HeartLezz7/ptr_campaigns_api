@@ -1,4 +1,4 @@
-const { readFile, writeFile } = require("./handleFile");
+const { readFile } = require("./handleFile");
 
 // function sum(arr, category) {
 //   return arr.reduce((acc, item) => {
@@ -20,24 +20,28 @@ const discount = async (amout = {}, isUsePoint = false) => {
     let sumPrice = {};
 
     for (let key of products) {
-      totalPrice += key.price;
+      let result = key.price * key.amount;
+      totalPrice += result;
       if (sumPrice[key.category] == undefined) {
-        sumPrice[key.category] = key.price;
+        sumPrice[key.category] = result;
       } else {
-        sumPrice[key.category] += key.price;
+        sumPrice[key.category] += result;
       }
     }
 
     // coupon
-    if (amout.coupon != undefined) {
-      if (amout.coupon.fix != undefined) {
-        discount = amout.fix;
-        discountPrice += totalPrice - amout.fix;
-      } else if (amout.percentage != undefined) {
-        discount = 1 - amout.percentage / 100;
-        if (discount > 0 && discount < 1) {
-          discountPrice += totalPrice * discount;
-        }
+    if (amout.coupon != undefined && amout.coupon.fix != undefined) {
+      discount = amout.coupon.fix;
+      discountPrice += totalPrice - amout.coupon.fix;
+    } else if (
+      amout.coupon != undefined &&
+      amout.coupon.percentage != undefined
+    ) {
+      discount = amout.coupon.percentage / 100;
+      if (discount == 1) {
+        return discountPrice;
+      } else if (discount > 0 && discount < 1) {
+        discountPrice += totalPrice * (1 - discount);
       }
     }
 
@@ -50,9 +54,7 @@ const discount = async (amout = {}, isUsePoint = false) => {
           totalPrice -= reduce * discount;
         }
       }
-    }
-
-    if (user.point > 0 && isUsePoint) {
+    } else if (user.point > 0 && isUsePoint) {
       discount = user.point;
       if (discount > totalPrice * 0.2) {
         discount = totalPrice * 0.2;
@@ -75,7 +77,10 @@ const discount = async (amout = {}, isUsePoint = false) => {
   }
 };
 
-discount({ onTop: 15, category: ["cloth"] }).then((res) => console.log(res));
+discount({ coupon: { percentage: 50 } }).then((res) => console.log(res));
+// discount({ coupon: { fix: 300 }, onTop: 15, category: ["cloth"] }).then((res) =>
+//   console.log(res)
+// );
 
 parameter = [
   {

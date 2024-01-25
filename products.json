@@ -1,6 +1,18 @@
 [
-  { "name": "Shirt", "category": "cloth", "price": 400, "amount": 1 },
-  { "name": "Hat", "category": "cloth", "price": 280, "amount": 1 },
-  { "name": "Watch", "category": "accessory", "price": 2800, "amount": 1 },
-  { "name": "Phone", "category": "accessory", "price": 5000, "amount": 1 }
+  { "id": 1, "name": "Hat", "category": "cloth", "price": 280, "amount": 1 },
+  { "id": 2, "name": "Shirt", "category": "cloth", "price": 400, "amount": 1 },
+  {
+    "id": 3,
+    "name": "Watch",
+    "category": "accessory",
+    "price": 2800,
+    "amount": 1
+  },
+  {
+    "id": 4,
+    "name": "Phone",
+    "category": "accessory",
+    "price": 5000,
+    "amount": 1
+  }
 ]

@@ -1,14 +1,5 @@
 const { readFile } = require("./handleFile");
 
-// function sum(arr, category) {
-//   return arr.reduce((acc, item) => {
-//     if (item.category == category) {
-//       acc += item.price;
-//     }
-//     return acc;
-//   }, 0);
-// }
-
 const discount = async (amout = {}, isUsePoint = false) => {
   try {
     const products = await readFile("products.json");
@@ -82,7 +73,7 @@ discount({ coupon: { percentage: 50 } }).then((res) => console.log(res));
 //   console.log(res)
 // );
 
-parameter = [
+let parameter = [
   {
     coupon: { fix: 500, percentage: 100 },
     onTop: 15,

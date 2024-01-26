@@ -12,7 +12,6 @@ exports.getProducts = async (req, res, next) => {
 
 exports.summaryDiscount = async (req, res, next) => {
   try {
-    console.log(req.body, "input");
     const result = await discountCampaigns(req.body);
 
     res.status(201).json(result);

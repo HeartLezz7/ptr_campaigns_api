@@ -2,7 +2,6 @@ const { readFile } = require("./handleFile");
 
 module.exports = async (amout) => {
   try {
-    console.log(amout, "CEHECK");
     const products = await readFile("products.json");
     const user = await readFile("users.json");
 
@@ -13,49 +12,57 @@ module.exports = async (amout) => {
     for (let key of products) {
       let result = key.price * key.amount;
       totalPrice += result;
-      if (sumPrice[key.categories] == undefined) {
-        sumPrice[key.categories] = result;
+      if (sumPrice[key.category] == undefined) {
+        sumPrice[key.category] = result;
       } else {
-        sumPrice[key.categories] += result;
+        sumPrice[key.category] += result;
       }
     }
 
+    let discountPrice = totalPrice;
+
     // coupon
     if (amout.fix != undefined) {
-      discount = amout.fix;
-      discountPrice += totalPrice - amout.fix;
+      discount += +amout.fix;
+      discountPrice -= amout.fix;
     } else if (amout.percentage != undefined) {
-      discount = amout.percentage / 100;
-      if (discount == 1) {
+      let percentDis = amout.percentage / 100;
+      if (percentDis == 1) {
         return discountPrice;
-      } else if (discount > 0 && discount < 1) {
-        discountPrice += totalPrice * (1 - discount);
+      } else if (percentDis > 0 && percentDis < 1) {
+        let percentPrice = Math.floor(totalPrice * percentDis);
+        discount += percentPrice;
+        discountPrice -= percentPrice;
       }
     }
 
     // on top
     if (amout.onTop != undefined && amout.categories.length != 0) {
-      discount = amout.onTop / 100;
+      let onTopDis = amout.onTop / 100;
       for (let i = 0; i < amout.categories.length; i++) {
-        let reduce = sumPrice[amout.categories];
+        let reduce = sumPrice[amout.categories[i]];
         if (reduce != undefined) {
-          totalPrice -= reduce * discount;
+          let cost = reduce * onTopDis;
+          discount += cost;
+          discountPrice -= cost;
         }
       }
     } else if (user.point > 0 && !!amout.isUsePoint == true) {
-      discount = user.point;
-      if (discount > totalPrice * 0.2) {
-        discount = totalPrice * 0.2;
-        discountPrice += totalPrice - discount;
+      let usePoint = user.point;
+      if (usePoint > totalPrice * 0.2) {
+        usePoint = totalPrice * 0.2;
+        discountPrice -= usePoint;
       } else {
-        discountPrice += totalPrice - discount;
+        discountPrice -= usePoint;
       }
+      discount += usePoint;
     }
 
     //seasonal
     if ((amout.every != undefined, amout.price != undefined)) {
-      discount = Math.floor(totalPrice / amout.every) * amout.price;
-      discountPrice += totalPrice - discount;
+      let seasonDis = Math.floor(totalPrice / amout.every) * amout.price;
+      discount += seasonDis;
+      discountPrice -= seasonDis;
     }
 
     return { discountPrice, totalPrice, discount };

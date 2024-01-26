@@ -1,11 +1,22 @@
 const { readFile } = require("../campaigns/handleFile");
+const discountCampaigns = require("../campaigns/campaigns");
 
-exports.getProducts = async (req, res) => {
+exports.getProducts = async (req, res, next) => {
   try {
     const products = await readFile("products.json");
-    console.log(products);
     res.status(200).json(products);
   } catch (error) {
     console.log(error);
+  }
+};
+
+exports.summaryDiscount = async (req, res, next) => {
+  try {
+    console.log(req.body, "input");
+    const result = await discountCampaigns(req.body);
+
+    res.status(201).json(result);
+  } catch (err) {
+    next(err);
   }
 };
